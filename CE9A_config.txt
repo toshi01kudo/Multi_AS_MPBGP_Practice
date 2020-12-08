@@ -25,6 +25,7 @@ router bgp 10
   soft-reconfiguration inbound
   allowas-in 3
  exit-peer-policy
+bgp router-id 100.0.10.9
 timers bgp 15 45
 !
  address-family ipv4 vrf R29A
