@@ -2,6 +2,11 @@
 ip vrf R29A
  rd 100.0.0.29:10
 !
+interface Loopback9
+ description *** MGMT R9A ***
+ ip vrf forwarding R9A
+ ip address 100.0.10.9 255.255.255.255
+!
 interface Loopback29
  description *** MGMT R29A ***
  ip vrf forwarding R29A
