@@ -2,6 +2,10 @@
 ip vrf R29P
  rd 100.0.20.29:20
 !
+interface Loopback9
+ description *** MGMT R9P ***
+ ip address 100.0.20.9 255.255.255.255
+!
 interface Loopback29
  description *** MGMT R29P ***
  ip vrf forwarding R29P
@@ -21,6 +25,7 @@ router bgp 10
   allowas-in 3
  exit-peer-policy
 timers bgp 15 45
+bgp router-id 100.0.20.9
 !
  address-family ipv4 vrf R29P
   bgp router-id 100.0.20.29
@@ -85,7 +90,7 @@ router bgp 10
 ip vrf R59P
  rd 100.0.20.59:20
 !
-interface Loopback9
+interface Loopback59
  description *** MGMT R59P ***
  ip vrf forwarding R59P
  ip address 100.0.20.59 255.255.255.255
@@ -120,7 +125,7 @@ router bgp 10
 ip vrf R79P
  rd 100.0.20.79:20
 !
-interface Loopback9
+interface Loopback79
  description *** MGMT R79P ***
  ip vrf forwarding R79P
  ip address 100.0.20.79 255.255.255.255
