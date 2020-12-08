@@ -85,7 +85,7 @@ router bgp 10
 ip vrf R59A
  rd 100.0.0.59:10
 !
-interface Loopback9
+interface Loopback59
  description *** MGMT R59A ***
  ip vrf forwarding R59A
  ip address 100.0.0.59 255.255.255.255
@@ -120,7 +120,7 @@ router bgp 10
 ip vrf R79A
  rd 100.0.0.79:10
 !
-interface Loopback9
+interface Loopback79
  description *** MGMT R79A ***
  ip vrf forwarding R79A
  ip address 100.0.0.79 255.255.255.255
