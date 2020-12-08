@@ -38,7 +38,7 @@ int fa0/0.29
 router bgp 10
  template peer-session PEER_R29P
   remote-as 100
-  local-as 65029 no-prepend replace-as
+  local-as 65129 no-prepend replace-as
  exit-peer-session
  !
  address-family ipv4 vrf R29P
@@ -73,7 +73,7 @@ int fa0/1.39
 router bgp 10
  template peer-session PEER_R39P
   remote-as 100
-  local-as 65039 no-prepend replace-as
+  local-as 65139 no-prepend replace-as
  exit-peer-session
  !
  address-family ipv4 vrf R39P
@@ -108,7 +108,7 @@ int fa1/0.59
 router bgp 10
  template peer-session PEER_R59P
   remote-as 200
-  local-as 65059 no-prepend replace-as
+  local-as 65159 no-prepend replace-as
  exit-peer-session
  !
  address-family ipv4 vrf R59P
@@ -143,7 +143,7 @@ int fa1/1.79
 router bgp 10
  template peer-session PEER_R79P
   remote-as 300
-  local-as 65079 no-prepend replace-as
+  local-as 65179 no-prepend replace-as
  exit-peer-session
  !
  address-family ipv4 vrf R79P
