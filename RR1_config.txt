@@ -70,11 +70,9 @@ timers bgp 15 45
 !
  neighbor 100.0.0.2 remote-as 100
  neighbor 100.0.0.2 update-source l1
- neighbor 100.0.0.2 route-reflector-client
  neighbor 100.0.0.2 inherit peer-policy IBGP
  neighbor 100.0.0.3 remote-as 100
  neighbor 100.0.0.3 update-source l1
- neighbor 100.0.0.3 route-reflector-client
  neighbor 100.0.0.3 inherit peer-policy IBGP
  neighbor 172.24.14.4 remote-as 200
  neighbor 172.24.14.4 inherit peer-policy EBGP
