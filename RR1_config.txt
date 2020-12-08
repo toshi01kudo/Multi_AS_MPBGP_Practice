@@ -1,0 +1,94 @@
+ip vrf Apple
+ rd 100.0.10.1:100
+ route-target export 10:100
+ route-target import 10:100
+!
+ip vrf Peach
+ rd 100.0.20.1:200
+ route-target export 20:200
+ route-target import 20:200
+!
+interface Loopback1
+ description *** MGMT R1 ***
+ ip address 100.0.0.1 255.255.255.255
+!
+interface Loopback11
+ description *** MGMT R1A ***
+ ip vrf for Apple
+ ip address 100.0.10.1 255.255.255.255
+!
+interface Loopback12
+ description *** MGMT R1P ***
+ ip vrf for Peach
+ ip address 100.0.20.1 255.255.255.255
+!
+int fa1/0
+ description *** From R1 to R2 ***
+ ip address 192.168.12.1 255.255.255.0
+ mpls ip
+ no shut
+!
+int fa1/1
+ description *** From R1 to R3 ***
+ ip address 192.168.13.1 255.255.255.0
+ mpls ip
+ no shut
+!
+int fa0/0
+ description *** From R1 to R4 ***
+ ip address 172.24.14.1 255.255.255.0
+ mpls bgp forwarding
+ no shut
+!
+int fa0/1
+ description *** From R1 to R6 ***
+ ip address 172.24.16.1 255.255.255.0
+ mpls bgp forwarding
+ no shut
+!
+router ospf 100
+ network 192.168.0.0 0.0.255.255 area 0
+ network 100.0.0.0 0.0.0.255 area 0
+ passive-interface default
+ no passive fa1/0
+ no passive fa1/1
+!
+router bgp 100
+ template peer-policy EBGP
+  advertisement-interval 5
+  soft-reconfiguration inbound
+ exit-peer-policy
+!
+ template peer-policy IBGP
+  advertisement-interval 5
+  next-hop-self
+  soft-reconfiguration inbound
+ exit-peer-policy
+timers bgp 15 45
+!
+ bgp router-id 100.0.0.1
+!
+ neighbor 100.0.0.2 remote-as 100
+ neighbor 100.0.0.2 update-source l1
+ neighbor 100.0.0.2 route-reflector-client
+ neighbor 100.0.0.2 inherit peer-policy IBGP
+ neighbor 100.0.0.3 remote-as 100
+ neighbor 100.0.0.3 update-source l1
+ neighbor 100.0.0.3 route-reflector-client
+ neighbor 100.0.0.3 inherit peer-policy IBGP
+ neighbor 172.24.14.4 remote-as 200
+ neighbor 172.24.14.4 inherit peer-policy EBGP
+ neighbor 172.24.16.6 remote-as 300
+ neighbor 172.24.16.6 inherit peer-policy EBGP
+!
+ address-family vpnv4
+  neighbor 100.0.0.2 activate
+  neighbor 100.0.0.2 send-community both
+  neighbor 100.0.0.3 activate
+  neighbor 100.0.0.3 send-community both
+  neighbor 172.24.14.4 activate
+  neighbor 172.24.14.4 send-community both
+  neighbor 172.24.16.6 activate
+  neighbor 172.24.16.6 send-community both
+ exit-address-family
+!
