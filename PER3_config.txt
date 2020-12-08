@@ -1,0 +1,89 @@
+ip vrf Apple
+ rd 100.0.10.3:100
+ route-target export 10:100
+ route-target import 10:100
+!
+ip vrf Peach
+ rd 100.0.20.3:200
+ route-target export 20:200
+ route-target import 20:200
+!
+interface Loopback3
+ description *** MGMT R3 ***
+ ip address 100.0.0.3 255.255.255.255
+!
+interface Loopback31
+ description *** MGMT R3A ***
+ ip vrf for Apple
+ ip address 100.0.10.3 255.255.255.255
+!
+interface Loopback32
+ description *** MGMT R3P ***
+ ip vrf for Peach
+ ip address 100.0.20.3 255.255.255.255
+!
+int fa1/0
+ description *** From R3 to R1 ***
+ ip address 192.168.13.3 255.255.255.0
+ mpls ip
+ no shut
+!
+int fa0/0
+ no shut
+!
+int fa0/0.39
+ description *** From R3 to R39A ***
+ encapsulation dot1Q 39
+ ip vrf for Apple
+ ip address 10.10.39.3 255.255.255.0
+!
+int fa0/1
+ no shut
+!
+int fa0/1.39
+ description *** From R3 to R39P ***
+ encapsulation dot1Q 39
+ ip vrf for Peach
+ ip address 10.20.39.3 255.255.255.0
+!
+router ospf 100
+ network 192.168.0.0 0.0.255.255 area 0
+ network 100.0.0.0 0.0.0.255 area 0
+ passive-interface default
+ no passive fa1/0
+ no passive fa1/1
+!
+router bgp 100
+ template peer-policy EBGP
+  advertisement-interval 5
+  soft-reconfiguration inbound
+ exit-peer-policy
+!
+ template peer-policy IBGP
+  advertisement-interval 5
+  next-hop-self
+  soft-reconfiguration inbound
+ exit-peer-policy
+timers bgp 15 45
+!
+ bgp router-id 100.0.0.3
+!
+ neighbor 100.0.0.1 remote-as 100
+ neighbor 100.0.0.1 update-source l3
+ neighbor 100.0.0.1 inherit peer-policy IBGP
+!
+ address-family vpnv4
+  neighbor 100.0.0.1 activate
+  neighbor 100.0.0.1 send-community both
+ exit-address-family
+!
+ address-family ipv4 vrf Apple
+  neighbor 10.10.39.9 remote-as 65039
+  neighbor 10.10.39.9 inherit peer-policy EBGP
+ exit-address-family
+!
+ address-family ipv4 vrf Peach
+  neighbor 10.20.39.9 remote-as 65139
+  neighbor 10.20.39.9 inherit peer-policy EBGP
+ exit-address-family
+!
