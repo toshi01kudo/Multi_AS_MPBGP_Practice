@@ -83,8 +83,10 @@ timers bgp 15 45
 !
  address-family vpnv4
   neighbor 100.0.0.2 activate
+  neighbor 100.0.0.2 route-reflector-client
   neighbor 100.0.0.2 send-community both
   neighbor 100.0.0.3 activate
+  neighbor 100.0.0.3 route-reflector-client
   neighbor 100.0.0.3 send-community both
   neighbor 172.24.14.4 activate
   neighbor 172.24.14.4 send-community both
