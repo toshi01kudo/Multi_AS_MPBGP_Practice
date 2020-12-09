@@ -1,0 +1,71 @@
+ip vrf Apple
+ rd 100.0.10.4:100
+ route-target export 10:100
+ route-target import 10:100
+!
+ip vrf Peach
+ rd 100.0.20.4:200
+ route-target export 20:200
+ route-target import 20:200
+!
+interface Loopback4
+ description *** MGMT R4 ***
+ ip address 100.0.0.4 255.255.255.255
+ ip router isis
+!
+interface Loopback41
+ description *** MGMT R4A ***
+ ip vrf for Apple
+ ip address 100.0.10.4 255.255.255.255
+!
+interface Loopback42
+ description *** MGMT R4P ***
+ ip vrf for Peach
+ ip address 100.0.20.4 255.255.255.255
+!
+int fa1/0
+ description *** From R4 to R5 ***
+ ip address 192.168.45.4 255.255.255.0
+ mpls ip
+ ip router isis
+ no shut
+!
+int fa0/0
+ description *** From R4 to R1 ***
+ ip address 172.24.14.4 255.255.255.0
+ mpls bgp forwarding
+ no shut
+!
+router isis
+ net 49.0001.1000.0000.0004.00
+ is-type level-2-only
+ metric-style wide
+!
+router bgp 200
+ template peer-policy EBGP
+  advertisement-interval 5
+  soft-reconfiguration inbound
+ exit-peer-policy
+!
+ template peer-policy IBGP
+  advertisement-interval 5
+  next-hop-self
+  soft-reconfiguration inbound
+ exit-peer-policy
+timers bgp 15 45
+!
+ bgp router-id 100.0.0.4
+!
+ neighbor 100.0.0.5 remote-as 200
+ neighbor 100.0.0.5 update-source l4
+ neighbor 100.0.0.5 inherit peer-policy IBGP
+ neighbor 172.24.14.1 remote-as 100
+ neighbor 172.24.14.1 inherit peer-policy EBGP
+!
+ address-family vpnv4
+  neighbor 100.0.0.5 activate
+  neighbor 100.0.0.5 send-community both
+  neighbor 172.24.14.1 activate
+  neighbor 172.24.14.1 send-community both
+ exit-address-family
+!
