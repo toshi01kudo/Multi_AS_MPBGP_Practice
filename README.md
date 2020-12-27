@@ -11,6 +11,9 @@ Cisco 製品のみを利用した、シングルベンダー構成とし、GNS3�
 * Inner-AS: ```192.168.xx.xx/24```
 * Inter-AS: ```172.24.xx.xx/24```
 * Mgmt IP: ```100.0.x.x/32```
+* eBGP: CE = ```.9```
+* VRF Apple: ```10.10.xx.xx/24```
+* VRF Peach: ```10.20.xx.xx/24```
 
 ![NWD](./MultiAS_MPBGP_NWDv2.PNG)
 
