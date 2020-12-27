@@ -89,7 +89,7 @@ int fa0/0
 複数のユーザを同一機器に仮想的に収容しつつも、ルーティングテーブルをVRFにて分割する。\
 分割したルーティング情報をMP-BGPにて伝搬する。
 
-通信の流れ：
+通信の流れ：\
 ①　ユーザごとのルーティング情報にRD(Route Distinguisher)を付加することで重複のないVPNv4プレフィックスを作成可能。拡張コミュニティを使用。\
 異なるRD値を設定することによって、PEルータのMP-BGPテーブル上で経路情報を区別可能。\
 * VPNv4プレフィックス: RD (64 bits) + IPv4 (32bits) にて構成されるルート情報
@@ -100,7 +100,7 @@ int fa0/0
 
 設定例（RR1）：
 ```
-※RR1はルートリフレクターとしても動作するため、route-reflector-clientの設定も必要。
+※RR1はInner ASではルートリフレクターとしても動作するため、route-reflector-clientの設定も必要。
 ip vrf Apple
  rd 100.0.10.1:100
  route-target export 10:100
